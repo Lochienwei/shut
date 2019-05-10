@@ -1,0 +1,157 @@
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="">
+
+<style>
+td{
+    /*border:1px solid black;*/
+    width:100px;
+    height:100px;
+    /* background-color:green; */
+}
+.red{
+    /* background-color:green; */
+    background-image:url(10.png);
+    background-repeat: no-repeat;
+    
+}
+.blue{
+    /* background-color:green; */
+    background-image:url(20.png);
+    background-repeat: no-repeat;
+   
+}
+p{
+    font-size:20px;
+    font-weight: bold;
+    color:whitesmoke;
+}
+input{
+    background-color:red ;
+    color:whitesmoke;
+    font-size: 20px;
+}
+body{
+    font-family:consolas;
+    background-image:url(back0.jpg) ;
+    /*background-image: linear-gradient(180deg,green, rgb(10, 10, 10));*/
+    background-size:cover;
+    cursor: url(ff.png) 25 25, auto;
+    text-align:center;
+}
+
+</style>
+<p >打擊恐怖份子射擊訓練</p>
+<p >射中次數:<span id="score">0</span>   剩餘時間:<span id="timeleft">10</span>秒</p>
+<table cellspacing="0" style="background-image:url(back.jpg) ;" >
+    <tr>
+        <td ></td><td ></td><td ></td><td ></td>
+        <td></td><td ></td><td ></td><td ></td>
+        <td></td> <td></td>         </tr>
+    <tr>
+        <td></td><td ></td><td ></td><td ></td>
+        <td></td><td ></td><td ></td><td ></td>
+        <td></td> <td></td> 
+    </tr>
+    <tr>
+        <td></td><td ></td><td ></td><td ></td>
+        <td></td><td ></td><td ></td><td ></td>
+        <td></td> <td></td> 
+    </tr>
+</table>
+<input type="button" value="開始射擊" id="start" >
+
+
+<div style="width:150px;height:100px;background-color:yellow;border:5px black;border-radius:10%;margin:auto;text-align:left;">
+<p style=" color:blue;"><br>訓練成績:<span id="result" style=" color:red;" ></span>
+<br>程度:<span id="level" style=" color:red;" ></span></p>
+
+</div>
+<script>
+    //設定遊戲執行時間為10秒
+    let exetime =10;    
+    //取得開始按鈕
+    let start = document.getElementById("start");
+    let score = 0;
+    let scoreText = document.getElementById("score");
+
+    //所有td
+    let tds = document.getElementsByTagName("td");
+    
+    //每秒換格子的計時器
+    let timer = 0;
+    //遊戲時間計時器
+    let gameTimer = 0;
+    //剩餘時間
+    let timeleft = document.getElementById("timeleft");    
+    //定義遊戲時間
+    let time = exetime;
+    //點擊開始按鈕時
+start.onclick = function(){
+            // 執行計時器
+            timer = setInterval(game, 1000);
+            //立刻換格子
+            game();
+            //將按鈕停用
+            start.setAttribute("disabled",
+            "ture");
+            gameTimer = setInterval(rundown, 1000);
+            
+            rundown();
+            }
+    //遊戲時間倒數
+
+function rundown(){
+        time--;
+        timeleft.innerText = time; 
+        if(time ==0){
+            result.innerText = score+"分";
+            if(score >= 0 && score < 10) level.innerText ="爛透了!"; 
+            if(score >= 10 && score < 15) level.innerText ="還不錯!"; 
+            if(score >= 15 && score < 20) level.innerText ="很棒!"; 
+            if(score >= 20) level.innerText ="太強了!"; 
+
+                clearInterval(gameTimer);
+                clearInterval(timer);
+        //延遲0.1秒出現alert 及修改時間與分數
+        setTimeout(function(){
+            alert(`時間到了,你一共擊斃了${score}個歹徒!!`);
+            time =exetime;
+            score= 0;
+            //將按鈕啟用
+            start.removeAttribute("disabled");
+            //改回時間
+            timeleft.innerText = exetime;
+            //改回分數
+            scoreText.innerText = 0;
+        },100);
+
+        //重設所有格子
+        for(let i=0;i< tds.length;i++){
+            tds[i].classList.remove("red");
+            tds[i].classList.remove("blue");
+            }  
+          }
+        }
+
+function game(){
+            for(let i=0;i< tds.length;i++){
+                //console.log(tds.length);
+                tds[i].classList.remove("red");
+                tds[i].classList.remove("blue");
+            }
+           for(let i=0;i<3;i++){
+                let rand = Math.floor( Math.random()*36 );
+                tds[rand].classList.add("red");
+            }
+        }
+        for(let i=0;i< tds.length;i++){
+            tds[i].onclick= function(){
+            if( this.classList.contains("red")){ 
+                this.classList.remove("red");
+                this.classList.add("blue");
+                score++;
+                scoreText.innerText =score ;
+                }
+        }
+        }
+</script>
